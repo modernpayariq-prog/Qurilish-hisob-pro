@@ -1,1 +1,48 @@
 
+name: Build Qurilish Hisob Pro APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qurilish_hisob_pro_android_source.zip'
+      - '.github/workflows/android.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Extract project
+        run: |
+          test -f qurilish_hisob_pro_android_source.zip
+          unzip -q qurilish_hisob_pro_android_source.zip -d source
+          test -f source/qhp_android_project/settings.gradle.kts
+
+      - name: Build APK
+        working-directory: source/qhp_android_project
+        run: gradle --no-daemon assembleDebug
+
+      - name: Save APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: qurilish-hisob-pro-apk
+          path: source/qhp_android_project/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
