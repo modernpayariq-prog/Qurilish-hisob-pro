@@ -31,8 +31,8 @@ jobs:
 
       - name: Extract project
         run: |
-          test -f qurilish_hisob_pro_android_source.zip
-          unzip -q qurilish_hisob_pro_android_source.zip -d source
+          test -f qurilish_hisob_pro_android_source_fixed.zip
+          unzip -q qurilish_hisob_pro_android_source_fixed.zip -d source
           test -f source/qhp_android_project/settings.gradle.kts
 
       - name: Build APK
